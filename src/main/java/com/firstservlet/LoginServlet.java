@@ -24,14 +24,22 @@ public class LoginServlet extends HttpServlet{
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        String nameRegex="^[A-Z]{1}[a-z]{3,}$";
         String user = req.getParameter("user");
         String pwd = req.getParameter("pwd");
 
 
         String userID = getServletConfig().getInitParameter("user");
         String password = getServletConfig().getInitParameter("password");
-
+        if((userID.equals(user) && password.equals(pwd))&&Pattern.matches(nameRegex,userID)) {
+            req.setAttribute("user",user);
+            req.getRequestDispatcher("LoginSuccess.jsp").forward(req, resp);
+        } else {
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/login.html");
+            PrintWriter out  = resp.getWriter();
+            out.println("<font color = red> Either username or password is wrong</font>");
+            rd.include(req, resp);
+        }
 
     }
 
